@@ -1,0 +1,127 @@
+package trabajoimplementacion;
+
+import java_cup.runtime.Symbol;
+
+parser code
+{:
+    private Symbol s;
+
+    public void syntax_error(Symbol s) {
+        this.s = s;
+    }
+
+    public Symbol getS() {
+        return this.s;
+    }
+:};
+
+terminal Carrito, Espacio, SetEspacio, Color, SetForma, Velocidad, Avanzar, Retroceder, Girar, Detener, Sensor, Sonido,
+        ParentesisAbierto, ParentesisCerrado, Coma, PuntoComa, Igual, Numero, NumeroDecimal, Identificador, 
+        Suma, Multiplicacion, Division, Resta, CadenaTexto, Comentario, ERROR, Punto,
+        Direccion;
+
+non terminal INICIO, SENTENCIA, CREAR_CARRO, CREAR_ESPACIO, ASIGNAR_ESPACIO, ASIGNAR_COLOR, ASIGNAR_FORMA, 
+              ASIGNAR_VELOCIDAD, MOVER, ACCION_SENSOR, ACCION_SONIDO, NUMERO_E_D, DECLARACION_ASIGNACION,
+              LISTA_PARAMETROS, PARAMETRO, PONER_COMENTARIO, VALOR;
+
+// Declaración de precedencia y asociatividad
+precedence left Suma, Resta;
+precedence left Multiplicacion, Division;
+precedence left ParentesisAbierto, ParentesisCerrado;
+
+start with INICIO;
+
+NUMERO_E_D ::= Numero | NumeroDecimal;
+
+INICIO ::= SENTENCIA;
+
+SENTENCIA ::= 
+    SENTENCIA CREAR_CARRO |
+    SENTENCIA CREAR_ESPACIO |
+    SENTENCIA ASIGNAR_ESPACIO |
+    SENTENCIA ASIGNAR_COLOR |
+    SENTENCIA ASIGNAR_FORMA |
+    SENTENCIA ASIGNAR_VELOCIDAD |
+    SENTENCIA MOVER |
+    SENTENCIA ACCION_SENSOR |
+    SENTENCIA ACCION_SONIDO |
+    CREAR_CARRO |
+    CREAR_ESPACIO |
+    ASIGNAR_ESPACIO |
+    ASIGNAR_COLOR |
+    ASIGNAR_FORMA |
+    ASIGNAR_VELOCIDAD |
+    MOVER |
+    ACCION_SENSOR |
+    ACCION_SONIDO |
+    DECLARACION_ASIGNACION |
+    PONER_COMENTARIO
+;
+
+DECLARACION_ASIGNACION ::= 
+    Identificador Igual NUMERO_E_D PuntoComa |
+    Identificador Igual CadenaTexto PuntoComa
+;
+
+PONER_COMENTARIO ::= 
+    Comentario
+;
+
+CREAR_CARRO ::= 
+    Carrito ParentesisAbierto Identificador ParentesisCerrado PuntoComa
+;
+
+CREAR_ESPACIO ::= 
+    Identificador Igual Espacio ParentesisAbierto LISTA_PARAMETROS ParentesisCerrado PuntoComa 
+;
+
+LISTA_PARAMETROS ::=
+    PARAMETRO Coma PARAMETRO Coma PARAMETRO Coma PARAMETRO 
+;
+
+PARAMETRO ::=
+    VALOR |
+    PARAMETRO Suma VALOR |
+    PARAMETRO Resta VALOR |
+    PARAMETRO Multiplicacion VALOR |
+    PARAMETRO Division VALOR |
+    ParentesisAbierto PARAMETRO ParentesisCerrado
+;
+
+VALOR ::=
+    Identificador |
+    NUMERO_E_D |
+    ERROR
+;
+
+ASIGNAR_ESPACIO ::= 
+    Identificador Punto SetEspacio ParentesisAbierto Identificador Coma PARAMETRO Coma PARAMETRO ParentesisCerrado PuntoComa
+;
+
+ASIGNAR_COLOR ::= 
+    Identificador Punto Color ParentesisAbierto Numero Coma Numero Coma Numero ParentesisCerrado PuntoComa
+;
+
+ASIGNAR_FORMA ::= 
+    Identificador Punto SetForma ParentesisAbierto CadenaTexto ParentesisCerrado PuntoComa
+;
+
+ASIGNAR_VELOCIDAD ::= 
+    Velocidad ParentesisAbierto Identificador Coma NUMERO_E_D ParentesisCerrado PuntoComa
+;
+
+MOVER ::= 
+    Identificador Punto Avanzar ParentesisAbierto PARAMETRO ParentesisCerrado PuntoComa |
+    Identificador Punto Retroceder ParentesisAbierto PARAMETRO ParentesisCerrado PuntoComa |
+    Identificador Punto Girar ParentesisAbierto CadenaTexto ParentesisCerrado PuntoComa |
+    Identificador Punto Detener ParentesisAbierto ParentesisCerrado PuntoComa |
+    Identificador Punto Direccion ParentesisAbierto PARAMETRO Coma PARAMETRO ParentesisCerrado PuntoComa
+;
+
+ACCION_SENSOR ::= 
+    Sensor ParentesisAbierto Identificador ParentesisCerrado PuntoComa
+;
+
+ACCION_SONIDO ::= 
+    Sonido ParentesisAbierto Identificador Coma NUMERO_E_D ParentesisCerrado PuntoComa
+;

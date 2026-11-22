@@ -1,0 +1,20 @@
+// Declaración y configuración inicial
+Carrito(McQueen);
+Sensor(McQueen);
+Sonido(McQueen, 12.5);
+McQueen.Color(255, 255, 255);
+McQueen.SetForma("Convertible");
+
+// Espacio y posición inicial
+LugarGrande = Espacio(0, 0, 18, 7);
+LugarGrande.SetEspacio(McQueen, 3, 2);
+McQueen.Direccion(1, 0);
+
+// Movimientos
+Velocidad(McQueen, 30);
+McQueen.Avanzar(7.5 * 2);
+McQueen.Girar("izquierda");
+McQueen.Direccion(1, 1);
+Velocidad(McQueen, 40);
+McQueen.Avanzar(4);
+McQueen.Detener();
